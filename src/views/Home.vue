@@ -18,11 +18,12 @@
     <dialog id="product-details">
       <form method="dialog">
         <h3>Hello there</h3>
-        <p>Name: {{ currentProduct.name }}</p>
-        <p>Price: {{ currentProduct.price }}</p>
-        <p>Description: {{ currentProduct.description }}</p>
-        <p>Image url: {{ currentProduct.image_url }}</p>
+        <p>Name: <input type="text" v-model="currentProduct.name"></p>
+        <p>Price: <input type="text" v-model="currentProduct.price"></p>
+        <p>Description: <input type="text" v-model="currentProduct.description"></p>
+        <p>Image url: <input type="text" v-model="currentProduct.image_url"></p>
         <button>Close</button>
+        <button v-on:click="updateProduct()">Update</button>
       </form>
     </dialog>
     <!-- <button v-on:click="productsIndex">Index</button> -->
@@ -74,6 +75,19 @@ export default {
       this.currentProduct = theProduct;
       console.log("show product");
       document.querySelector("#product-details").showModal();
+    },
+    updateProduct: function () {
+      var params = {
+        name: this.currentProduct.name,
+        price: this.currentProduct.price,
+        description: this.currentProduct.description,
+        image_url: this.currentProduct.image_url,
+      };
+      axios
+        .patch("/api/products/" + this.currentProduct.id, params)
+        .then((response) => {
+          console.log(response.data);
+        });
     },
   },
 };
