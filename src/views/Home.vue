@@ -9,8 +9,8 @@
     <button v-on:click="createProduct()">Create Product</button>
 
     <div v-for="product in products">
-      {{ product.id }}
       <h3>{{ product.name }}</h3>
+      <h6>{{ product.id }}</h6>
       <p><img v-bind:src="product.image_url" v-bind:alt="product.name"></p>
       <p>${{ product.price }}</p>
       <button v-on:click="showProduct(product)">More Info</button>
@@ -24,6 +24,7 @@
         <p>Image url: <input type="text" v-model="currentProduct.image_url"></p>
         <button>Close</button>
         <button v-on:click="updateProduct()">Update</button>
+        <button v-on:click="destroyProduct()">Remove</button>
       </form>
     </dialog>
     <!-- <button v-on:click="productsIndex">Index</button> -->
@@ -87,6 +88,20 @@ export default {
         .patch("/api/products/" + this.currentProduct.id, params)
         .then((response) => {
           console.log(response.data);
+        });
+    },
+    destroyProduct: function () {
+      console.log("destroy product");
+      axios
+        .delete("/api/products/" + this.currentProduct.id)
+        .then((response) => {
+          console.log(response.data);
+          // remove recipe from array
+          // find correct index in array
+          var index = this.products.indexOf(this.currentProduct);
+          console.log(index);
+          // then delete at the index
+          this.products.splice(index, 1);
         });
     },
   },
